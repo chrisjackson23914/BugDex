@@ -616,26 +616,25 @@
     };
     // After adding a new bug, show New Bug Unlocked screen
     addToCollectionBtn.onclick = function() {
-      if (currentCameraImg) {
-        // Always add as Lady Bug for demo
-        const newBug = {
-          img: currentCameraImg,
-          name: 'Lady Bug',
-          traits: ['Harmless', 'Predator', 'Beneficial'],
-          info: 'Coccinella septempunctata. Ladybugs are small beetles that are often red with black spots. They are beneficial insects that eat aphids.',
-          scientific: 'Coccinella septempunctata'
-        };
-        collection.unshift(newBug);
-        saveCollection();
-        renderCollection();
-        // Reset camera
-        cameraImgPreview.style.display = 'none';
-        cameraPlaceholder.style.display = 'block';
-        addToCollectionBtn.style.display = 'none';
-        currentCameraImg = '';
-        // Show New Bug Unlocked screen
-        showNewBugUnlocked(newBug);
-      }
+      // Always add as Lady Bug for demo, use photo if available, else use default image
+      const ladybugImg = currentCameraImg || 'img/ladybug.jpg';
+      const newBug = {
+        img: ladybugImg,
+        name: 'Lady Bug',
+        traits: ['Harmless', 'Predator', 'Beneficial'],
+        info: 'Coccinella septempunctata. Ladybugs are small beetles that are often red with black spots. They are beneficial insects that eat aphids.',
+        scientific: 'Coccinella septempunctata'
+      };
+      collection.unshift(newBug);
+      saveCollection();
+      renderCollection();
+      // Reset camera
+      cameraImgPreview.style.display = 'none';
+      cameraPlaceholder.style.display = 'block';
+      addToCollectionBtn.style.display = 'none';
+      currentCameraImg = '';
+      // Show New Bug Unlocked screen
+      showNewBugUnlocked(newBug);
     };
     function showNewBugUnlocked(bug) {
       // Set image
