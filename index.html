@@ -274,19 +274,32 @@
       <button onclick="finishProfileSetup()">Submit</button>
     </div>
     <!-- Profile Screen -->
-    <div class="screen" id="profile-screen">
-      <h2 id="profile-username">@cool_bugs</h2>
-      <div style="width:100px; height:100px; background:#eee; border-radius:50%; margin:16px auto; overflow:hidden;">
-        <img id="profile-pic" src="" alt="Profile" style="width:100%; height:100%; object-fit:cover; display:none;" />
-      </div>
-      <button onclick="showEditProfile()">Edit Profile</button>
-      <div id="profile-bio">hi i like caterpillars and ants too !</div>
-      <div style="margin:12px 0;">Friends: <span id="profile-friends">12</span> | Posts: <span id="profile-posts">4</span></div>
-      <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
-        <div style="width:60px; height:60px; background:#ccc; border-radius:12px;"></div>
-        <div style="width:60px; height:60px; background:#ccc; border-radius:12px;"></div>
-        <div style="width:60px; height:60px; background:#ccc; border-radius:12px;"></div>
-        <div style="width:60px; height:60px; background:#ccc; border-radius:12px;"></div>
+    <div class="screen" id="profile-screen" style="align-items:center;">
+      <div style="width:100vw; max-width:340px; margin:0 auto;">
+        <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-top:18px;">
+          <div style="font-size:2.1em; font-weight:800; letter-spacing:0.5px;">BugDex</div>
+          <span style="font-size:1.5em; margin-left:4px;">🐞</span>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-top:10px;">
+          <span id="profile-username" style="font-size:1.25em; font-weight:700;">@cool_bugs</span>
+          <span style="display:flex; align-items:center; gap:4px; font-size:1em; color:#222; margin-left:12px;"><span style="font-size:1.1em;">👥</span> <span id="profile-friends">12</span></span>
+          <span style="display:flex; align-items:center; gap:4px; font-size:1em; color:#222; margin-left:8px;"><span style="font-size:1.1em;">📸</span> <span id="profile-posts">4</span></span>
+        </div>
+        <div style="position:relative; width:110px; height:110px; margin:18px auto 0 auto;">
+          <div style="width:110px; height:110px; background:#eee; border-radius:50%; overflow:hidden; border:4px solid #fff; box-shadow:0 2px 8px #0001;">
+            <img id="profile-pic" src="" alt="Profile" style="width:100%; height:100%; object-fit:cover; display:none;" />
+          </div>
+          <button onclick="showEditProfile()" style="position:absolute; left:50%; bottom:-18px; transform:translateX(-50%); background:#6fa94e; color:#fff; font-weight:700; font-size:0.95em; border-radius:14px; padding:6px 18px; border:none; box-shadow:0 2px 8px #0002;">Edit Profile</button>
+        </div>
+        <div style="margin-top:32px; text-align:center;">
+          <div id="profile-name" style="font-size:1.1em; font-weight:600; margin-bottom:2px;">Joey</div>
+          <div id="profile-bio" style="font-size:1em; color:#222; opacity:0.95;">hi i like caterpillars and ants too !</div>
+        </div>
+        <div style="margin:24px 0 0 0;">
+          <div id="profile-bugs-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; width:100%; max-width:320px; margin:0 auto;">
+            <!-- Bug images and add button will be rendered by JS -->
+          </div>
+        </div>
       </div>
     </div>
     <!-- Edit Profile Screen -->
@@ -455,17 +468,6 @@
       saveProfile();
       renderProfile();
       showScreen('profile-screen');
-    }
-    function renderProfile() {
-      document.getElementById('profile-username').textContent = profile.username || '@cool_bugs';
-      document.getElementById('profile-bio').textContent = profile.bio || 'hi i like caterpillars and ants too !';
-      const pic = document.getElementById('profile-pic');
-      if (profile.pic) {
-        pic.src = profile.pic;
-        pic.style.display = 'block';
-      } else {
-        pic.style.display = 'none';
-      }
     }
     // Edit Profile
     function showEditProfile() {
@@ -783,6 +785,63 @@
     const style = document.createElement('style');
     style.innerHTML = `.trait-btn { border-radius:8px; border:none; padding:6px 14px; font-size:1em; font-weight:bold; cursor:pointer; background:#eee; color:#222; transition:background 0.2s; } .trait-btn.active { background:#4a8cda; color:#fff; } .trait-btn[data-trait='Harmless'].active { background:#fff; color:#222; border:1.5px solid #222; } .trait-btn[data-trait='Predator'].active { background:#c44; color:#fff; } .trait-btn[data-trait='Beneficial'].active { background:#4a8cda; color:#fff; }`;
     document.head.appendChild(style);
+    // Render profile bugs grid (posts)
+    function renderProfileBugsGrid() {
+      const grid = document.getElementById('profile-bugs-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      // Add Picture cell
+      const addDiv = document.createElement('div');
+      addDiv.style.background = '#e6ffe0';
+      addDiv.style.borderRadius = '14px';
+      addDiv.style.height = '70px';
+      addDiv.style.display = 'flex';
+      addDiv.style.alignItems = 'center';
+      addDiv.style.justifyContent = 'center';
+      addDiv.style.fontSize = '2.2em';
+      addDiv.style.cursor = 'pointer';
+      addDiv.innerHTML = '<span style="color:#6fa94e;">+</span>';
+      addDiv.onclick = function() { showScreen('camera-screen'); };
+      grid.appendChild(addDiv);
+      // Show up to 5 bug images from collection
+      (collection.slice(0,5)).forEach(bug => {
+        const div = document.createElement('div');
+        div.style.background = '#fff';
+        div.style.borderRadius = '14px';
+        div.style.height = '70px';
+        div.style.overflow = 'hidden';
+        div.style.display = 'flex';
+        div.style.alignItems = 'center';
+        div.style.justifyContent = 'center';
+        div.style.cursor = 'pointer';
+        if (bug.img) {
+          const img = document.createElement('img');
+          img.src = bug.img;
+          img.style.width = '100%';
+          img.style.height = '100%';
+          img.style.objectFit = 'cover';
+          div.appendChild(img);
+        }
+        div.onclick = () => showBugInfo(collection.indexOf(bug));
+        grid.appendChild(div);
+      });
+    }
+    // Patch renderProfile to also update name and bugs grid
+    function renderProfile() {
+      document.getElementById('profile-username').textContent = profile.username || '@cool_bugs';
+      document.getElementById('profile-bio').textContent = profile.bio || 'hi i like caterpillars and ants too !';
+      document.getElementById('profile-name').textContent = profile.name || 'Joey';
+      const pic = document.getElementById('profile-pic');
+      if (profile.pic) {
+        pic.src = profile.pic;
+        pic.style.display = 'block';
+      } else {
+        pic.style.display = 'none';
+      }
+      // Update posts count
+      document.getElementById('profile-posts').textContent = collection.length;
+      renderProfileBugsGrid();
+    }
   </script>
 </body>
 </html>
