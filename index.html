@@ -35,16 +35,19 @@
       position: relative;
       overflow-x: hidden;
       box-shadow: 0 0 16px #0002;
+      display: flex;
+      flex-direction: column;
     }
     .screen {
       display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
+      flex: 1 1 auto;
+      overflow-y: auto;
       padding-bottom: 90px;
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
+      box-sizing: border-box;
+      position: static;
       background: var(--green-mid);
       z-index: 1;
     }
@@ -343,6 +346,22 @@
       <button class="nav-btn" id="nav-social" onclick="showScreen('social-screen')">💬<div style='font-size:0.7em;'>Social</div></button>
       <button class="nav-btn" id="nav-collection" onclick="showScreen('collection-screen')">📚<div style='font-size:0.7em;'>Collection</div></button>
     </div>
+    <!-- Bug Detected Modal -->
+    <div class="modal" id="bug-detected-modal">
+      <div class="modal-content">
+        <h3 style="margin-top:0;">We detected a Lady Bug!</h3>
+        <div style="width:80px; height:80px; margin:0 auto 10px auto; border-radius:50%; overflow:hidden; background:#eee;">
+          <img src="img/ladybug.jpg" alt="Lady Bug" style="width:100%;height:100%;object-fit:cover;" />
+        </div>
+        <div style="margin:10px 0; font-weight:bold;">Lady Bug</div>
+        <div style="display:flex; gap:8px; justify-content:center; margin-bottom:10px;">
+          <span style="background:#fff; color:#222; border-radius:8px; padding:4px 10px; font-size:0.98em;">Harmless</span>
+          <span style="background:#4a8cda; color:#fff; border-radius:8px; padding:4px 10px; font-size:0.98em;">Beneficial</span>
+        </div>
+        <div style="font-size:0.98em; margin-bottom:12px;">Coccinella septempunctata. Ladybugs are small beetles that are often red with black spots. They are beneficial insects that eat aphids.</div>
+        <button class="main-btn" onclick="closeBugDetectedModal()">OK</button>
+      </div>
+    </div>
   </div>
   <script>
     // Simple SPA navigation
@@ -574,10 +593,16 @@
       showBugInfo(editingBugIdx);
       closeModal('bug-edit-modal');
     };
-    // After adding a new bug, prompt for details
+    // After adding a new bug, auto-detect as Lady Bug
     addToCollectionBtn.onclick = function() {
       if (currentCameraImg) {
-        collection.unshift({ img: currentCameraImg, name: '', info: '', traits: [] });
+        // Always add as Lady Bug for demo
+        collection.unshift({
+          img: currentCameraImg,
+          name: 'Lady Bug',
+          traits: ['Harmless', 'Beneficial'],
+          info: 'Coccinella septempunctata. Ladybugs are small beetles that are often red with black spots. They are beneficial insects that eat aphids.'
+        });
         saveCollection();
         renderCollection();
         // Reset camera
@@ -585,14 +610,14 @@
         cameraPlaceholder.style.display = 'block';
         addToCollectionBtn.style.display = 'none';
         currentCameraImg = '';
-        // Prompt for details
-        editingBugIdx = 0;
-        document.getElementById('edit-bug-name').value = '';
-        document.getElementById('edit-bug-desc').value = '';
-        document.querySelectorAll('#edit-bug-traits .trait-btn').forEach(btn => btn.classList.remove('active'));
-        showModal('bug-edit-modal');
+        // Show detected modal
+        showModal('bug-detected-modal');
       }
     };
+    function closeBugDetectedModal() {
+      closeModal('bug-detected-modal');
+      showScreen('collection-screen');
+    }
     function renderCollection() {
       const grid = document.getElementById('collection-grid');
       grid.innerHTML = '';
