@@ -312,7 +312,6 @@
       </div>
       <input type="file" accept="image/*" capture="environment" style="display:none;" id="camera-input">
       <button class="main-btn" onclick="document.getElementById('camera-input').click()">Take Picture</button>
-      <button class="main-btn" id="add-to-collection-btn" style="display:none; background:var(--button-green-dark);">Add to Collection</button>
     </div>
     <!-- Error Modal -->
     <div class="modal" id="error-modal">
@@ -548,21 +547,23 @@
     const cameraInput = document.getElementById('camera-input');
     const cameraImgPreview = document.getElementById('camera-img-preview');
     const cameraPlaceholder = document.getElementById('camera-placeholder');
-    const addToCollectionBtn = document.getElementById('add-to-collection-btn');
     let currentCameraImg = '';
     cameraInput.addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          cameraImgPreview.src = evt.target.result;
-          cameraImgPreview.style.display = 'block';
-          cameraPlaceholder.style.display = 'none';
-          addToCollectionBtn.style.display = 'block';
-          currentCameraImg = evt.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
+      // Instantly show Lady Bug unlocked screen, always use default image
+      const newBug = {
+        img: 'img/ladybug.jpg',
+        name: 'Lady Bug',
+        traits: ['Harmless', 'Predator', 'Beneficial'],
+        info: 'Coccinella septempunctata. Ladybugs are small beetles that are often red with black spots. They are beneficial insects that eat aphids.',
+        scientific: 'Coccinella septempunctata'
+      };
+      collection.unshift(newBug);
+      saveCollection();
+      renderCollection();
+      cameraImgPreview.style.display = 'none';
+      cameraPlaceholder.style.display = 'block';
+      currentCameraImg = '';
+      showNewBugUnlocked(newBug);
     });
     // Bug editing state
     let editingBugIdx = null;
@@ -615,27 +616,6 @@
       closeModal('bug-edit-modal');
     };
     // After adding a new bug, show New Bug Unlocked screen
-    addToCollectionBtn.onclick = function() {
-      // Always add as Lady Bug for demo, use photo if available, else use default image
-      const ladybugImg = currentCameraImg || 'img/ladybug.jpg';
-      const newBug = {
-        img: ladybugImg,
-        name: 'Lady Bug',
-        traits: ['Harmless', 'Predator', 'Beneficial'],
-        info: 'Coccinella septempunctata. Ladybugs are small beetles that are often red with black spots. They are beneficial insects that eat aphids.',
-        scientific: 'Coccinella septempunctata'
-      };
-      collection.unshift(newBug);
-      saveCollection();
-      renderCollection();
-      // Reset camera
-      cameraImgPreview.style.display = 'none';
-      cameraPlaceholder.style.display = 'block';
-      addToCollectionBtn.style.display = 'none';
-      currentCameraImg = '';
-      // Show New Bug Unlocked screen
-      showNewBugUnlocked(newBug);
-    };
     function showNewBugUnlocked(bug) {
       // Set image
       const imgDiv = document.getElementById('new-bug-img');
