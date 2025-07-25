@@ -143,22 +143,16 @@
       color: #fff;
       font-size: 2.1em;
       display: flex;
-      flex-direction: column;
       align-items: center;
+      justify-content: center;
       cursor: pointer;
       outline: none;
-      padding: 0 10px;
+      padding: 0 18px;
       transition: color 0.2s;
     }
     .nav-btn.active {
       color: var(--nav-active);
       font-weight: bold;
-    }
-    .nav-btn div {
-      font-size: 0.85em;
-      font-weight: bold;
-      margin-top: 2px;
-      letter-spacing: 0.5px;
     }
     /* Notification badge for nav */
     .nav-btn-badge {
@@ -368,10 +362,10 @@
     </div>
     <!-- Bottom Nav Bar -->
     <div class="nav-bar">
-      <button class="nav-btn active" id="nav-profile" onclick="showScreen('profile-screen')">👤<div style='font-size:0.7em;'>Profile</div></button>
-      <button class="nav-btn" id="nav-camera" onclick="showScreen('camera-screen')">📷<div style='font-size:0.7em;'>Camera</div></button>
-      <span class="nav-btn-badge"><button class="nav-btn" id="nav-social" onclick="showScreen('social-screen')">💬<div style='font-size:0.7em;'>Social</div></button><span class="badge">3</span></span>
-      <button class="nav-btn" id="nav-collection" onclick="showScreen('collection-screen')">📚<div style='font-size:0.7em;'>Collection</div></button>
+      <button class="nav-btn active" id="nav-profile" onclick="showScreen('profile-screen')">👤</button>
+      <button class="nav-btn" id="nav-camera" onclick="showScreen('camera-screen')">📷</button>
+      <span class="nav-btn-badge"><button class="nav-btn" id="nav-social" onclick="showScreen('social-screen')">💬</button><span class="badge">3</span></span>
+      <button class="nav-btn" id="nav-collection" onclick="showScreen('collection-screen')">📚</button>
     </div>
     <!-- New Bug Unlocked Screen -->
     <div class="screen" id="new-bug-unlocked-screen" style="justify-content:flex-start; align-items:center; padding-top:32px;">
